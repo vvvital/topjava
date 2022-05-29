@@ -56,6 +56,8 @@ Java Enterprise Online Project
 > - добавил `UserMealWithExcess.toString()` и метод для выполнения _Optional домашнего задания_
 > - метод фильтрации в `TimeUtil` переименовали в `isBetweenHalfOpen` (также изменилась логика сравнения - `startTime` включается в интервал) 
 
+### GitHub поменял политику - теперь пушить нужно через токен. IDEA предложит его сгенерить при пуше или можно [создать токен в настройках](https://githubhelp.com/EvgenKuz/Intellij-IDEA-GitHub-SetUp)
+
 ##  Инструкция по шагам (из видео):</h3>
 -  <a href="http://javaops.ru/view/soft">Установить ПО (git, JDK8, IntelliJ IDEA, Maven)</a>
 -  Создать аккаунт на <a href="https://github.com">GitHub</a>
