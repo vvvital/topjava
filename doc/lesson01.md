@@ -62,20 +62,7 @@
 - [The State of Java in 2019](https://www.baeldung.com/java-in-2019)
 - [JVM Ecosystem Report 2021](https://snyk.io/jvm-ecosystem-report-2021/)
 
-### ![video](https://cloud.githubusercontent.com/assets/13649199/13672715/06dbc6ce-e6e7-11e5-81a9-04fbddb9e488.png) 6. [Maven](https://drive.google.com/file/d/1qEJTwv9FNUQjx-y9MSydH01xaAne0-hu)
-- Wiki: [Apache Maven](https://ru.wikipedia.org/wiki/Apache_Maven)
-- [The Central Repository](http://search.maven.org)
-- Дополнительно:
-   - [Мое Wiki Maven](https://github.com/JavaOPs/topjava/wiki/Maven)
-   - [Основы Maven](https://www.youtube.com/watch?v=0uwMKktzixU)
-   - JavaRush: [Основы Maven](https://javarush.ru/groups/posts/2523-chastjh-4osnovih-maven)
-   - Инструмент сборки проектов [Maven](https://www.examclouds.com/ru/java/java-core-russian/lesson20)
-   - [Maven Getting Started Guide](https://maven.apache.org/guides/getting-started/index.html)
-   - [Видео: Maven vs Gradle vs SBT (Архипов, Борисов, Садогурский)](https://www.youtube.com/watch?v=21qdRgFsTy0)
-   - [Build Lifecycle](http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html)
-   - [Dependency Mechanism](http://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html)
-
-### ![video](https://cloud.githubusercontent.com/assets/13649199/13672715/06dbc6ce-e6e7-11e5-81a9-04fbddb9e488.png) 7. <a href="https://drive.google.com/open?id=0B9Ye2auQ_NsFT3pWNkMzWVVybnc">WAR. Веб-контейнер Tomcat. Сервлеты.</a>
+### ![video](https://cloud.githubusercontent.com/assets/13649199/13672715/06dbc6ce-e6e7-11e5-81a9-04fbddb9e488.png) 6. <a href="https://drive.google.com/open?id=0B9Ye2auQ_NsFT3pWNkMzWVVybnc">WAR. Веб-контейнер Tomcat. Сервлеты.</a>
 > - Обновил зависимость до Servlet 4.0. Установите себе [Tomcat 9.x](https://tomcat.apache.org/download-90.cgi)
 
 **Внимание: Tomcat 10 требует пакета `javarta.*`, устанавливайте 9-ю версию**
@@ -146,9 +133,32 @@ com.google.inject.ProvisionException: Unable to provision, see the following err
   - <a href="http://java-online.ru/jsp.xhtml">Java Server Page</a>
   - <a href="http://stackoverflow.com/questions/1890438/how-to-get-parameters-from-the-url-with-jsp#1890462">Java объекты, доступные в JSP</a>
 
-### ![video](https://cloud.githubusercontent.com/assets/13649199/13672715/06dbc6ce-e6e7-11e5-81a9-04fbddb9e488.png) 8. <a href="https://drive.google.com/open?id=0B9Ye2auQ_NsFaTdYUnpLNFFUeXM">Логирование.</a>
-#### Apply 1_5_logging.patch
+### ![video](https://cloud.githubusercontent.com/assets/13649199/13672715/06dbc6ce-e6e7-11e5-81a9-04fbddb9e488.png) 7. [Логирование](https://www.youtube.com/watch?v=mo8z3zRVV1E)
+#### Apply 1_5_simple_logging.patch
  
+- [Зачем нужно логирование](https://javarush.ru/groups/posts/2293-zachem-nuzhno-logirovanie)
+- [Logback Project](https://logback.qos.ch/)
+
+> А зачем мы использовали logback? Почему SLF4J нас не устроило? Почему реализация логирования не log4j?
+
+`SLF4J-API` это API. В нее включена только пустая реализация `org.slf4j.helpers.NOPLogger` (можно посмотреть в исходниках). Logback для новых проектов стал стандарт, *Spring Boot* используют его по умолчанию.
+[Reasons to prefer logback over log4j](http://logback.qos.ch/reasonsToSwitch.html)
+
+> Почему `private static final Logger log` а не `LOG/LOGGER` ?
+
+Это [правило именования констант, которые не "deeply immutable"](https://google.github.io/styleguide/javaguide.html#s5.2.4-constant-names), те если их содержимое можно изменить.
+
+#### Apply 1_6_logging_config.patch
+
+- [Java Logging: история кошмара](http://habrahabr.ru/post/113145/)
+- [Project dependencies for logging](https://www.slf4j.org/manual.html#projectDep)
+- [Добавление зависимостей логирования](http://www.slf4j.org/legacy.html) в проект
+- Не делать конкатенацию строк: [форматирование в логах через {}](https://www.slf4j.org/faq.html#logging_performance)
+- Дополнительно:
+  - [Logback configuration](https://logback.qos.ch/manual/configuration.html)
+  - [Ведение лога приложения](http://www.skipy.ru/useful/logging.html)
+  - [Владимир Красильщик – Что надо знать о логировании прагматичному Java‑программисту](https://www.youtube.com/watch?v=qzqAUUgB3v8)
+
 **Установите переменную окружения на TOPJAVA_ROOT на корень проекта и перезапустите IDEA. Слеши в пути должны быть в стиле unix (/)**
 
 Проверить, видит ли Java вашу переменную можно через `System.getenv("TOPJAVA_ROOT")`
@@ -163,34 +173,18 @@ com.google.inject.ProvisionException: Unable to provision, see the following err
 
 **Иногда антивирусы блокируют логирование (например Comodo). Если не работает и стоит антивирус- добавьте исключение.**
 
-> - изменения в проекте: убрал `LoggerWrapper` и логирую напрямую в логгер SLF4J. При логгировании через вспомогательный класс, в логе теряется имя исходного класса.
-> - удалил зависимость `jul-to-slf4j`. Она нам не нужна и, согласно <a href="https://www.youtube.com/watch?v=qzqAUUgB3v8">видео Владимира Красильщика про логирование</a>, она замедляет работу
-> - удалил зависимость `jcl-over-slf4j`. Используем Spring 5, который напрямую использует `slf4j` без `common-logging`. Про миграцию на Spring 5 будет видео в следующих занятиях.
-> - Не делать конкатенацию строк при логгировании сообщений, если уровень логирования в конфигурации выставлен выше уровня логирования в коде
->   - [slf4j formatting with {}](http://stackoverflow.com/a/10596390/548473)
->   - [What is the fastest way of (not) logging](https://www.slf4j.org/faq.html#logging_performance)
+#### ![question](https://cloud.githubusercontent.com/assets/13649199/13672858/9cd58692-e6e7-11e5-905d-c295d2a456f1.png) Ваши вопросы
 
-- <a href="http://habrahabr.ru/post/113145/">Java Logging: история кошмара</a>
-- [JavaRush: Logger](https://javarush.ru/quests/lectures/questcollections.level04.lecture09)
-- <a href="http://web.archive.org/web/20201127002158/http://skipy.ru/useful/logging.html">Ведение лога приложения</a>
-- <a href="http://logging.apache.org/log4j/2.x/index.html">Log4j</a>, <a href="http://logback.qos.ch/">Logback</a>
-- <a href="http://www.slf4j.org/legacy.html">Добавление зависимостей логирования</a> в проект.
-- <a href="http://logback.qos.ch/manual/configuration.html#variableSubstitution">Logback variable substitution</a>
-
-#### Проверочные вопросы:
-- Что нужно изменить в `pom.xml`, чтобы перейти с logback на log4j ?
+> Изменения в проекте, которым могут встретиться в других видео: 
+> - убрал `LoggerWrapper` и логирую напрямую в логгер SLF4J.
+> - удалил зависимости `jul-to-slf4j` и `jcl-over-slf4j`. Spring 5 напрямую использует `slf4j` без `common-logging`
 
 ### ![question](https://cloud.githubusercontent.com/assets/13649199/13672858/9cd58692-e6e7-11e5-905d-c295d2a456f1.png) Ваши вопросы
-
-> Почему `private static final Logger log` а не `LOG` ?
-
-Это [правило именования констант, которые не "deeply immutable"](https://google.github.io/styleguide/javaguide.html#s5.2.4-constant-names), те если их содержимое можно изменить.
 
 > Используются ли сервлеты на реальных проектах сегодня?
 
 1. Сервлеты лежат в основе любого Java web фреймворка, если взаимодействие не асинхронное и не nio (например Spring MVC). Работать с таким фреймворком и не знать, что такое сервлеты, все равно что работать с JPA/Hibarnate/любым ORM без знания JDBC.
 2. Бывают легаси проекты, бывают современные, где не подтягивается сторонний web фреймворк. При этом, даже работая с фреймворком, приходится иметь дело с Servlet API (часто с `HttpServletRequest/HttpServletResponse`) - обработка ошибок, валидаторы, фильтры, пре/пост обработка зарпосов, получение ip, работа с сессией и пр.
-
 
 >  Используются ли еще где-то в реальной разработке JSP, или это уже устаревшая технология? Заменит ли ее JSF (https://javatalks.ru/topics/38037)?
 
@@ -202,12 +196,6 @@ JSF- sun-овский еще фреймворк, с которым я ни ра�
 > Какой метод сервлета вызвается из HTML/JSP: doGet/doDelete/doPut..?
 
 Методы можно посмотреть в вкладке браузера `Network`. По [сcылке](http://htmlbook.ru/html/a/href) вызывается `GET/doGet()`. Из [формы можно делать GET и POST](http://htmlbook.ru/html/form/method), обычно данные формы передаются через POST. **Для других методов нужен JavaScript, пока их не используем**
-
-> А зачем мы использовали logback? Почему SLF4J нас не устроило? Почему реализация логирования не log4j?
-
-`SLF4J-API` это API. Там есть только пустая реализация `org.slf4j.helpers.NOPLogger` (можно посмотреть в исходниках). Logback для новых проектов стал стандарт. *spring-petclinic* и *spring-boot* используют его по умолчанию.
-Вместе с `logback-classic` подтягивается транзитивная зависимость `slf4j-api`. Можно было бы включить `logback-classic` в `pom.xml` со `scope:compile` и не включать `slf4j-api`. Нам версия `slf4j-api` понадобится, когда мы добавим в проект бриджи.
-- http://logback.qos.ch/reasonsToSwitch.html
 
 ---------
 
