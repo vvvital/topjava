@@ -45,7 +45,9 @@
 
 ## Занятие 4:
 ### ![video](https://cloud.githubusercontent.com/assets/13649199/13672715/06dbc6ce-e6e7-11e5-81a9-04fbddb9e488.png) 3. <a href="https://drive.google.com/open?id=0B9Ye2auQ_NsFU005ZzBNZmZnTVU">Методы улучшения качества кода</a>
-> - Поменяйте в `readme.md` сверху ссылку на свой `Codacy Badge` с сайта Codacy: *https://app.codacy.com/gh/[github_accaunt]/topjava/settings*
+
+#### Поменяйте в `readme.md` сверху ссылку на свой `Codacy Badge` с сайта Codacy: `https://app.codacy.com/gh/[github_accaunt]/topjava/settings`
+
 > - Плагины проверки качества кода теперь объединены в один **QAPlug**
 > - <a href="https://www.codacy.com">Codacy Check code</a> (проверка стиля и поиск багов в коде).
 >    - добавил [Codacy configuration file](https://support.codacy.com/hc/en-us/articles/360005097654-Ignore-files-from-Codacy-analysis) для исключения из проверок содержимого `webapp` и `READ.me` (на нашем проекте он выдает на них кучу ошибок)
