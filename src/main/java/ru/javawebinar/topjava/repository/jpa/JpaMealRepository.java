@@ -32,12 +32,9 @@ public class JpaMealRepository implements MealRepository {
             return meal;
         } else {
             Meal mealOld = get(meal.getId(), userId);
-            if (mealOld != null) {
-                meal.setUser(user);
-                return entityManager.merge(meal);
-            } else {
-                return null;
-            }
+            meal.setUser(user);
+            return mealOld != null ? entityManager.merge(meal) : null;
+
         }
     }
 
