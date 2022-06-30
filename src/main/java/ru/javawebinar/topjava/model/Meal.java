@@ -12,15 +12,20 @@ import java.time.LocalTime;
 @Table(name = "meals")
 public class Meal extends AbstractBaseEntity {
 
+    public static final String DELETE_ID = "delete from Meal m where m.id=?1 and m.user.id=?2";
+    public static final String GET_ID = "select m from Meal m where m.user.id=?1 and m.id=?2";
+    public static final String GET_ALL = "select m from Meal m where m.user.id=?1";
+    public static final String GET_BETWEEN = "select m from Meal m where m.user.id=?1 and m.dateTime>?2 and m.dateTime<?3";
+
     @Column(name = "date_time", nullable = false)
     @NotNull
     private LocalDateTime dateTime;
 
-    @Column(name = "description",nullable = false)
+    @Column(name = "description", nullable = false)
     @NotBlank
     private String description;
 
-    @Column(name = "calories",nullable = false)
+    @Column(name = "calories", nullable = false)
     @NotNull
     private int calories;
 

@@ -44,12 +44,12 @@ public class JpaMealRepository implements MealRepository {
     @Override
     @Transactional
     public boolean delete(int id, int userId) {
-        return entityManager.createQuery("delete from Meal m where m.id=?1 and m.user.id=?2").setParameter(1, id).setParameter(2, userId).executeUpdate() != 0;
+        return entityManager.createQuery(Meal.DELETE_ID).setParameter(1, id).setParameter(2, userId).executeUpdate() != 0;
     }
 
     @Override
     public Meal get(int id, int userId) {
-        TypedQuery<Meal> query = entityManager.createQuery("select m from Meal m where m.user.id=?1 and m.id=?2", Meal.class);
+        TypedQuery<Meal> query = entityManager.createQuery(Meal.GET_ID, Meal.class);
         query.setParameter(1, userId);
         query.setParameter(2, id);
         return DataAccessUtils.singleResult(query.getResultList());
@@ -57,15 +57,19 @@ public class JpaMealRepository implements MealRepository {
 
     @Override
     public List<Meal> getAll(int userId) {
-        return entityManager.createQuery("select m from Meal m where m.user.id=?1 order by m.dateTime", Meal.class).setParameter(1, userId).getResultList().stream().sorted(Comparator.comparing(Meal::getDateTime).reversed()).collect(Collectors.toList());
+        return entityManager.createQuery(Meal.GET_ALL, Meal.class).setParameter(1, userId).getResultList().stream()
+                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
-        TypedQuery<Meal> query = entityManager.createQuery("select m from Meal m where m.user.id=?1 and m.dateTime>?2 and m.dateTime<?3", Meal.class);
+        TypedQuery<Meal> query = entityManager.createQuery(Meal.GET_BETWEEN, Meal.class);
         query.setParameter(1, userId);
         query.setParameter(2, startDateTime);
         query.setParameter(3, endDateTime);
-        return query.getResultList().stream().sorted(Comparator.comparing(Meal::getDateTime).reversed()).collect(Collectors.toList());
+        return query.getResultList().stream()
+                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
+                .collect(Collectors.toList());
     }
 }
