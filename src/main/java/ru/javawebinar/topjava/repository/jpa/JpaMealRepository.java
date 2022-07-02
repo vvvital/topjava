@@ -11,9 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Repository
 @Transactional(readOnly = true)
@@ -34,19 +32,18 @@ public class JpaMealRepository implements MealRepository {
             Meal mealOld = get(meal.getId(), userId);
             meal.setUser(user);
             return mealOld != null ? entityManager.merge(meal) : null;
-
         }
     }
 
     @Override
     @Transactional
     public boolean delete(int id, int userId) {
-        return entityManager.createQuery(Meal.DELETE_ID).setParameter(1, id).setParameter(2, userId).executeUpdate() != 0;
+        return entityManager.createNamedQuery(Meal.DELETE_ID).setParameter(1, id).setParameter(2, userId).executeUpdate() != 0;
     }
 
     @Override
     public Meal get(int id, int userId) {
-        TypedQuery<Meal> query = entityManager.createQuery(Meal.GET_ID, Meal.class);
+        TypedQuery<Meal> query = entityManager.createNamedQuery(Meal.GET_ID, Meal.class);
         query.setParameter(1, userId);
         query.setParameter(2, id);
         return DataAccessUtils.singleResult(query.getResultList());
@@ -54,19 +51,15 @@ public class JpaMealRepository implements MealRepository {
 
     @Override
     public List<Meal> getAll(int userId) {
-        return entityManager.createQuery(Meal.GET_ALL, Meal.class).setParameter(1, userId).getResultList().stream()
-                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
-                .collect(Collectors.toList());
+        return entityManager.createNamedQuery(Meal.GET_ALL, Meal.class).setParameter(1, userId).getResultList();
     }
 
     @Override
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
-        TypedQuery<Meal> query = entityManager.createQuery(Meal.GET_BETWEEN, Meal.class);
+        TypedQuery<Meal> query = entityManager.createNamedQuery(Meal.GET_BETWEEN, Meal.class);
         query.setParameter(1, userId);
         query.setParameter(2, startDateTime);
         query.setParameter(3, endDateTime);
-        return query.getResultList().stream()
-                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
-                .collect(Collectors.toList());
+        return query.getResultList();
     }
 }

@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.model;
 
+import org.hibernate.validator.constraints.Range;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -8,14 +10,22 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 
+@NamedQueries({
+        @NamedQuery(name = Meal.DELETE_ID, query = "delete from Meal m where m.id=?1 and m.user.id=?2"),
+        @NamedQuery(name = Meal.GET_ID, query = "select m from Meal m where m.user.id=?1 and m.id=?2"),
+        @NamedQuery(name = Meal.GET_ALL, query = "select m from Meal m where m.user.id=?1 order by m.dateTime DESC"),
+        @NamedQuery(name = Meal.GET_BETWEEN, query = "select m from Meal m where m.user.id=?1 and m.dateTime>?2 and m.dateTime<?3 order by m.dateTime DESC")
+})
+
 @Entity
-@Table(name = "meals")
+@Table(name = "meals", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"})})
 public class Meal extends AbstractBaseEntity {
 
-    public static final String DELETE_ID = "delete from Meal m where m.id=?1 and m.user.id=?2";
-    public static final String GET_ID = "select m from Meal m where m.user.id=?1 and m.id=?2";
-    public static final String GET_ALL = "select m from Meal m where m.user.id=?1";
-    public static final String GET_BETWEEN = "select m from Meal m where m.user.id=?1 and m.dateTime>?2 and m.dateTime<?3";
+    public static final String DELETE_ID = "Meal.delete";
+    public static final String GET_ID = "Meal.get_id";
+    public static final String GET_ALL = "Meal.getAll";
+    public static final String GET_BETWEEN = "Meal.getBetween";
+
 
     @Column(name = "date_time", nullable = false)
     @NotNull
@@ -27,9 +37,12 @@ public class Meal extends AbstractBaseEntity {
 
     @Column(name = "calories", nullable = false)
     @NotNull
+    @Range(min = 10, max = 5000)
     private int calories;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @NotNull
     private User user;
 
     public Meal() {
