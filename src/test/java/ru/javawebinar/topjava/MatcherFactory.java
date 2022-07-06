@@ -15,22 +15,25 @@ public class MatcherFactory {
     }
 
     public static class Matcher<T> {
-        private final String[] fieldsToIgnore;
+        private String[] fieldsToIgnore;
 
         private Matcher(String... fieldsToIgnore) {
             this.fieldsToIgnore = fieldsToIgnore;
         }
 
         public void assertMatch(T actual, T expected) {
+            fieldsToIgnore=new String[]{"user"};
             assertThat(actual).usingRecursiveComparison().ignoringFields(fieldsToIgnore).isEqualTo(expected);
         }
 
         @SafeVarargs
         public final void assertMatch(Iterable<T> actual, T... expected) {
+            fieldsToIgnore=new String[]{"user"};
             assertMatch(actual, Arrays.asList(expected));
         }
 
         public void assertMatch(Iterable<T> actual, Iterable<T> expected) {
+            fieldsToIgnore=new String[]{"user"};
             assertThat(actual).usingRecursiveFieldByFieldElementComparatorIgnoringFields(fieldsToIgnore).isEqualTo(expected);
         }
     }
