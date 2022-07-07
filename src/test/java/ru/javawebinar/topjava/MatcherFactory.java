@@ -22,7 +22,7 @@ public class MatcherFactory {
         }
 
         public void assertMatch(T actual, T expected) {
-            fieldsToIgnore=new String[]{"user"};
+            fieldsToIgnore=new String[]{"user","calories","dateTime","description"};
             assertThat(actual).usingRecursiveComparison().ignoringFields(fieldsToIgnore).isEqualTo(expected);
         }
 
