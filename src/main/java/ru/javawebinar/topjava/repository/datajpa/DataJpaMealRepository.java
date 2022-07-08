@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.repository.datajpa;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
@@ -14,6 +16,8 @@ import java.util.List;
 @Repository
 @Transactional(readOnly = true)
 public class DataJpaMealRepository implements MealRepository {
+
+    private static final Logger log= LoggerFactory.getLogger("DataJpaMealRepository ");
 
     private final Sort SORT_DATE_TIME = Sort.by(Sort.Direction.DESC, "dateTime");
     private final CrudMealRepository crudRepository;
@@ -50,6 +54,8 @@ public class DataJpaMealRepository implements MealRepository {
 
     @Override
     public List<Meal> getAll(int userId) {
+        log.info("*****************************Method getAll from DataJpa*****************************+" +
+                "");
         return crudRepository.findAll(userId);
         /*return crudRepository.findAll().stream()
                 .filter(meal -> meal.getUser().getId()==userId)
