@@ -22,7 +22,7 @@ public class MatcherFactory {
         }
 
         public void assertMatch(T actual, T expected) {
-            assertThat(actual).usingRecursiveComparison().ignoringFields(fieldsToIgnore).isEqualTo(expected);
+            assertThat(actual).usingRecursiveComparison().ignoringFields("registered","meals").isEqualTo(expected);
         }
 
         @SafeVarargs
@@ -31,7 +31,7 @@ public class MatcherFactory {
         }
 
         public void assertMatch(Iterable<T> actual, Iterable<T> expected) {
-            assertThat(actual).usingRecursiveFieldByFieldElementComparatorIgnoringFields(fieldsToIgnore).isEqualTo(expected);
+            assertThat(actual).usingRecursiveFieldByFieldElementComparatorIgnoringFields("user","dateTime").isEqualTo(expected);
         }
     }
 }
